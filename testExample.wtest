@@ -1,0 +1,30 @@
+import example.*
+
+describe "group of tests for Dr Casa" {
+    const malariaPulenta = new Infecciosa(cantAmenazadas = 80000)
+    const frank = new Persona(gradosTemperatura = 36, celulas = 3500000)
+    const frankMuyEnfermo = new Persona(
+      gradosTemperatura = 36,
+      celulas = 3500000,
+      enfermedades = [
+        malariaPulenta,
+        malariaPulenta,
+        malariaPulenta,
+        malariaPulenta,
+        malariaPulenta,
+        malariaPulenta,
+        malariaPulenta
+      ]
+    )
+  test "Cuando una persona contrae una enfermedad, tiene una enfermedad mas" {
+    frank.contraer(malariaPulenta)
+    assert.equals(1, frank.cantEnfermedades())
+  }
+  
+  test "Una persona con 7 enfermedades, no puede contraer más" {
+    assert.throwsExceptionLike(new DomainException(
+        message = "Una persona no puede tener mas de 7 enfermedades"
+      ), {frankMuyEnfermo.contraer(malariaPulenta)})
+    assert.equals(7, frankMuyEnfermo.cantEnfermedades())
+  }
+}
