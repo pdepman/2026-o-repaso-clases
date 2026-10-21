@@ -1,7 +1,7 @@
 class Persona {
   var celulas = 0
   var gradosTemperatura = 0
-  var enfermedades = []
+  const enfermedades = []
   
   method contraer(enfermedad) {
     if (self.cantEnfermedades() >= 7) {
@@ -25,11 +25,13 @@ class Persona {
   method destruirCelulas(celulasAmenazadas) {
     celulas = 0.max(celulas - celulasAmenazadas)
   }
+  
+  method recibirDosis(dosis) {
+    enfermedades.forEach({ enfermedad => enfermedad.atenuarse(dosis * 15) })
+  }
 }
 
-class Infecciosa {
-  var cantAmenazadas = 0
-  
+class Infecciosa inherits EnfermedadAtenuable {
   method reproducirse() {
     cantAmenazadas *= 2
   }
@@ -39,10 +41,25 @@ class Infecciosa {
   }
 }
 
-class Autoinmune {
-  var cantAmenazadas = 0
-  
+class Autoinmune inherits EnfermedadAtenuable {
   method aplicarEfecto(persona) {
     persona.destruirCelulas(cantAmenazadas)
+  }
+} // ## Clase Herencia, Redefinicion, Clase abstracta
+
+// superclase !!
+class EnfermedadAtenuable {
+  var cantAmenazadas = 0
+  
+  method atenuarse(celulasCuradas) {
+    cantAmenazadas = 0.max(cantAmenazadas - celulasCuradas)
+  }
+}
+
+class Medico inherits Persona {
+  var dosis = 100
+  
+  method atender(persona) {
+    persona.recibirDosis(dosis)
   }
 }
